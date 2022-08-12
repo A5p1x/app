@@ -1,3 +1,1 @@
-date
-whoami
-hostname
+yum install ansible -y
