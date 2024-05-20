@@ -12,6 +12,6 @@ def red():
 
 @app.route('/')
 def blank():
-    return jsonify('u have red or green api to use test')
+    return jsonify('u have red or green api to use testik')
 if __name__ == '__main__':
     app.run(debug=True, port=4949)
