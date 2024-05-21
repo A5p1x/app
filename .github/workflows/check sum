@@ -1,12 +1,6 @@
 name: Check SSM Parameters
 
 on:
-  workflow_call:
-    inputs:
-      environment_name:
-          description: 'Event name'
-          required: true
-          type: string
   workflow_dispatch:
 
 
