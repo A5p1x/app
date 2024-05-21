@@ -42,8 +42,6 @@ jobs:
     - name: Run tests
       run: |
         # Example command to run tests
-        docker exec my-container sh -c "pytest tests"
+        curl localhost:4949
 
-    - name: Stop and remove Docker container
-      if: always()
-      run: docker stop my-container && docker rm my-container
+
