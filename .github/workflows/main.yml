@@ -1,0 +1,55 @@
+name: Build and Test Docker
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+        ports:
+          - 8080:8080
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: docker build -t apptest:latest .
+
+    - name: Run Docker container
+      run: docker run -d -p 8080:8080 --name apptest:latest
+
+    - name: Wait for the container to be ready
+      run: |
+        while ! curl -s http://localhost:8080 > /dev/null; do
+          echo "Waiting for container..."
+          sleep 3
+        done
+
+    - name: Run tests
+      run: |
+        # Example command to run tests
+        docker exec my-container sh -c "pytest tests"
+
+    - name: Stop and remove Docker container
+      if: always()
+      run: docker stop my-container && docker rm my-container
