@@ -1,8 +1,8 @@
 name: Check SSM Parameters
 
 on:
+  workflow_call:
   workflow_dispatch:
-
 
 jobs:
   check-ssm-parameters:
