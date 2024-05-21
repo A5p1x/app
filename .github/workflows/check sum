@@ -1,0 +1,44 @@
+name: Check SSM Parameters
+
+on:
+  workflow_call:
+    inputs:
+      environment_name:
+          description: 'Event name'
+          required: true
+          type: string
+  workflow_dispatch:
+
+
+jobs:
+  check-ssm-parameters:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Check if SSM Parameters exist
+      id: check-ssm
+      run: |
+        PARAMETERS=(
+          "test1"
+          "test2"
+        )
+
+        for PARAMETER_NAME in "${PARAMETERS[@]}"; do
+          PARAMETER_VALUE=$(aws ssm get-parameter --name "$PARAMETER_NAME" --query "Parameter.Value" --output text 2>/dev/null || echo "not_found")
+          if [ "$PARAMETER_VALUE" == "not_found" ]; then
+            echo "Parameter $PARAMETER_NAME does not exist."
+            exit 1
+          else
+            echo "Parameter $PARAMETER_NAME exists "
+          fi
+        done
