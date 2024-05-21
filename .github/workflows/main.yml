@@ -30,7 +30,7 @@ jobs:
       run: docker build -t apptest:latest .
 
     - name: Run Docker container
-      run: docker run -d -p 8080:8080 --name apptest:latest
+      run: docker run -d -p 4949:4949 apptest:latest
 
     - name: Wait for the container to be ready
       run: |
