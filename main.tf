@@ -20,7 +20,6 @@ data "aws_vpc" "default" {
 data "aws_caller_identity" "current" {}
 
 data "aws_ecr_repository" "example" {
-  name = "petstefan"  
 }
 
 resource "aws_iam_role" "ec2_role" {
