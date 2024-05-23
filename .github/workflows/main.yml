@@ -40,4 +40,60 @@ jobs:
         # Example command to run tests
         curl localhost:4949
 
+    - name: Log in to Amazon ECR
+      id: ecr-login
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        region: ${{ secrets.AWS_REGION }}
+        
+To create a GitHub Actions workflow that builds a Docker image from a Dockerfile in your repository and then uploads it to Amazon Elastic Container Registry (ECR), follow these steps:
 
+Set Up ECR Repository: Ensure you have an ECR repository created in your AWS account.
+
+Store AWS Credentials: Add your AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, and ECR_REPOSITORY) as secrets in your GitHub repository. You can add secrets by navigating to your repository settings -> Secrets and variables -> Actions.
+
+Create GitHub Actions Workflow: Add a new workflow file in your GitHub repository, typically located in .github/workflows/docker-publish.yml.
+
+Here's a sample docker-publish.yml file:
+
+yaml
+Copy code
+name: Build and Push Docker Image to ECR
+
+on:
+  push:
+    branches:
+      - main  # This triggers the workflow on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # This triggers the workflow on pull requests to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          region: ${{ secrets.AWS_REGION }}
+
+      - name: Build Docker image
+        run: |
+          # Get the ECR repository URI
+          REPOSITORY_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}"
+          
+          # Build the Docker image
+          docker build -t $REPOSITORY_URI:latest .
+        
+      - name: Push Docker image to ECR
+        run: |
+          # Get the ECR repository URI
+          REPOSITORY_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}"
+          
+          # Push the Docker image to ECR
+          docker push $REPOSITORY_URI:latest
