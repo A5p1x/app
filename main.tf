@@ -19,7 +19,8 @@ data "aws_vpc" "default" {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_ecr_repository" "example" {
+data "aws_ecr_repository" "ecr_repo_petstefan" {
+  name = "petstefan"  
 }
 
 resource "aws_iam_role" "ec2_role" {
@@ -107,8 +108,8 @@ resource "aws_instance" "petproject-app-instance" {
             sudo service docker start
             sudo usermod -a -G docker ec2-user
             aws ecr get-login-password --region ${var.region} | sudo docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com
-            sudo docker pull ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/${data.aws_ecr_repository.example.name}:latest
-            sudo docker run -d -p 80:4949 ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/${data.aws_ecr_repository.example.name}:latest
+            sudo docker pull ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/${data.aws_ecr_repository.ecr_repo_petstefan.name}:latest
+            sudo docker run -d -p 80:4949 ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/${data.aws_ecr_repository.ecr_repo_petstefan.name}:latest
             EOF
   tags = {
     Name = "petproject-instance"
