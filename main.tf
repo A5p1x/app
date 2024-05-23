@@ -19,12 +19,6 @@ data "aws_vpc" "default" {
 
 data "aws_caller_identity" "current" {}
 
-variable "region" {
-  description = "The AWS region to deploy resources."
-  type        = string
-  default     = "us-east-1" 
-}
-
 data "aws_ecr_repository" "example" {
   name = "petstefan"  
 }
@@ -120,9 +114,4 @@ resource "aws_instance" "petproject-app-instance" {
   tags = {
     Name = "petproject-instance"
   }
-}
-
-
-output "ec2_public_ip" {
-  value = aws_instance.petproject-app-instance.public_ip
 }
