@@ -22,11 +22,11 @@ data "aws_caller_identity" "current" {}
 variable "region" {
   description = "The AWS region to deploy resources."
   type        = string
-  default     = "us-east-1"  # Provide your desired default region here
+  default     = "us-east-1" 
 }
 
 data "aws_ecr_repository" "example" {
-  name = "petstefan"  # Replace with the name of your ECR repository
+  name = "petstefan"  
 }
 
 resource "aws_iam_role" "ec2_role" {
