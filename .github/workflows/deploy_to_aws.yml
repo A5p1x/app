@@ -21,6 +21,10 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan
+      env:
+        TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
