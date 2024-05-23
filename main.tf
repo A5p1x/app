@@ -29,6 +29,13 @@ data "aws_ecr_repository" "example" {
   name = "petstefan"  # Replace with the name of your ECR repository
 }
 
+resource "aws_s3_bucket" "petstefantfbucket" {
+  bucket = "petstefantfbucket" # Replace with a unique bucket name
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 resource "aws_iam_role" "ec2_role" {
   name = "ec2_role"
   assume_role_policy = jsonencode({
